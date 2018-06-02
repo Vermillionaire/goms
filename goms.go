@@ -1,17 +1,15 @@
 package main
 
 import (
-    "fmt"
-    "log"
 	"net/http"
 	"github.com/gobuffalo/packr"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
-}
+// Consider using echo for http library 
 
 func main() {
-    http.HandleFunc("/", handler)
-    log.Fatal(http.ListenAndServe(":8080", nil))
+	box := packr.NewBox("./web-interface")
+
+	http.Handle("/", http.FileServer(box))
+	http.ListenAndServe(":3000", nil)
 }
