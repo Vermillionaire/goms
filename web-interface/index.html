@@ -1,26 +1,57 @@
 <!DOCTYPE html>
-  <html>
+  <html class="max-height">
     <head>
       <!--Import Google Icon Font-->
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css-->
+      
       <link type="text/css" rel="stylesheet" href="libs/materialize/css/materialize.min.css"  media="screen,projection"/>
+      <link type="text/css" rel="stylesheet" href="css/main.css"/>
 
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
 
-    <body>
-      <nav>
-        <a href="#!" class="brand-logo">GOMS</a>
-        <ul class="right hide-on-med-and-down">
-          <li><a><i class="material-icons left">movie</i>Videos</a></li>
-          <li><a><i class="material-icons left">music_video</i>Music</a></li>
-          <li><a><i class="material-icons left">insert_photo</i>Photos</a></li>
-          <li><a ><i class="material-icons left">settings</i>Settings</a></li>
-        </ul>
-      </nav>
+    <body class="max-height">
+      <div class="navbar-fixed">
+        <nav>
+          <a href="#!" class="brand-logo right">GOMS</a>
+          <ul class="hide-on-med-and-down">
+            <li class="waves-effect"><a href="#!"><i class="material-icons left">movie</i>Videos</a></li>
+            <li class="waves-effect"><a href="#!"><i class="material-icons left">music_video</i>Music</a></li>
+            <li class="waves-effect"><a href="#!"><i class="material-icons left">insert_photo</i>Photos</a></li>
+            <li class="waves-effect"><a href="#!"><i class="material-icons left">settings</i>Settings</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="row max-height">
+        <div id="side-bar" class="col s2 z-depth-1 max-height">
+          <div class="input-field">
+          <label class="label-icon left" for="search"><i class="material-icons">search</i></label>
+          <form class="hoverable">
+                <input id="search" type="search" required>
+          </form>
+          <div class="divider"></div>
+        </div>
+
+        </div>
+  
+        <div class="col s10 max-height">
+          <!-- Teal page content  -->
+        </div>
+
+      <!--
+      <ul class="sidenav sidenav-fixed">
+        <li><a href="#!">First Sidebar Link</a></li>
+        <li><a href="#!">Second Sidebar Link</a></li>
+      </ul>-->
+              
+  
+      
       <!--JavaScript at end of body for optimized loading-->
+      <script type="text/javascript" src="libs/jquery-3.3.1.min.js"></script>
       <script type="text/javascript" src="libs/materialize/js/materialize.min.js"></script>
+      <script type="text/javascript" src="js/main.js"></script>
     </body>
   </html>
