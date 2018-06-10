@@ -29,7 +29,11 @@ func loadMedia(path string) {
 
 func visit(path string, f os.FileInfo, err error) error {
 	if f.IsDir() {
-		return nil
+		if f.Name() == ".icons" {
+			return filepath.SkipDir
+		} else {
+			return nil
+		}
 	}
 
 	fmt.Printf("Visited: %s\t\t", path)
@@ -39,10 +43,10 @@ func visit(path string, f os.FileInfo, err error) error {
 		fmt.Print("Supported Image.\n")
 
 		image := new(media)
-		image.iconPath = ""
 		image.id = uuid()
 		image.name = filepath.Base(path)
 		image.path = path
+		image.iconPath = filepath.Dir(path) + "/.icons/" + image.name
 
 		fmt.Printf("Adding media:\n\tname: %s\n\tid: %s\n\tpath: %s\n", image.name, image.id, image.path)
 		mediaFiles[image.id] = image
