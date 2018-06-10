@@ -2,10 +2,10 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"html/template"
 
 	"github.com/gobuffalo/packr"
+	"github.com/rs/zerolog/log"
 )
 
 type cardTemplates struct {
@@ -17,17 +17,11 @@ type cardTemplates struct {
 var templateData cardTemplates
 
 func loadTemplates() {
+	log.Debug().Msg("Loading html templates.")
 	templates := packr.NewBox("./templates")
 
 	html := templates.String("image.html")
 	templateData.image = html
-
-	fmt.Println("Loaded html: \n" + html)
-
-	var test card
-	test.Src = "test1"
-	test.Name = "test2"
-	fmt.Println(test.loadHTML())
 }
 
 type card struct {
@@ -36,6 +30,10 @@ type card struct {
 }
 
 func (c *card) loadHTML() string {
+	log.Debug().
+		Str("card", c.Name).
+		Msg("Parsing html for card.")
+
 	var tpl bytes.Buffer
 
 	tmpl := template.New("card")

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/rs/zerolog/log"
 )
 
 type media struct {
@@ -19,28 +19,40 @@ type media struct {
 var mediaFiles map[string]*media
 
 func loadMedia(path string) {
+	log.Info().Msg("Scanning for media to serve...")
 	if mediaFiles == nil {
 		mediaFiles = make(map[string]*media)
 	}
 
 	err := filepath.Walk(path, visit)
-	fmt.Printf("filepath.Walk() returned %v\n", err)
+
+	if err != nil {
+		log.Error().
+			Str("path", path).
+			Str("error", err.Error()).
+			Msg("There was an error searching for files in the path.")
+	}
 }
 
 func visit(path string, f os.FileInfo, err error) error {
 	if f.IsDir() {
 		if f.Name() == ".icons" {
+			log.Debug().
+				Str("folder", ".icons").
+				Msg("Skipping folder")
 			return filepath.SkipDir
 		} else {
 			return nil
 		}
 	}
 
-	fmt.Printf("Visited: %s\t\t", path)
+	log.Debug().
+		Str("file", path).
+		Msg("Found file")
+
 	ext := filepath.Ext(path)
 
 	if isImage(ext) {
-		fmt.Print("Supported Image.\n")
 
 		image := new(media)
 		image.id = uuid()
@@ -48,11 +60,17 @@ func visit(path string, f os.FileInfo, err error) error {
 		image.path = path
 		image.iconPath = filepath.Dir(path) + "/.icons/" + image.name
 
-		fmt.Printf("Adding media:\n\tname: %s\n\tid: %s\n\tpath: %s\n", image.name, image.id, image.path)
+		log.Info().
+			Str("name", image.name).
+			Str("id", image.id).
+			Msg("Adding image to server.")
+
 		mediaFiles[image.id] = image
 
 	} else {
-		fmt.Print("Not a supported image type.\n")
+		log.Debug().
+			Str("file", path).
+			Msg("Not a supported file type")
 	}
 
 	return nil
@@ -74,7 +92,9 @@ func isImage(extension string) bool {
 func uuid() string {
 	out, err := exec.Command("/usr/bin/uuidgen").Output()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal().
+			Str("command", "/usr/bin/uuidgen").
+			Msg("There was an error generating the uuid.")
 	}
 
 	//n := bytes.IndexByte(out, 0)
