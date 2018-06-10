@@ -1,6 +1,10 @@
 package main
 
 import (
+	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -14,6 +18,8 @@ type media struct {
 	id       string
 	path     string
 	iconPath string
+	width    int
+	height   int
 }
 
 var mediaFiles map[string]*media
@@ -59,8 +65,11 @@ func visit(path string, f os.FileInfo, err error) error {
 		image.name = filepath.Base(path)
 		image.path = path
 		image.iconPath = filepath.Dir(path) + "/.icons/" + image.name
+		image.width, image.height = getImageDimensions(path)
 
 		log.Info().
+			Int("width", image.width).
+			Int("height", image.height).
 			Str("name", image.name).
 			Str("id", image.id).
 			Msg("Adding image to server.")
@@ -101,4 +110,25 @@ func uuid() string {
 	s := string(out)
 	s = strings.TrimSpace(s)
 	return s
+}
+
+func getImageDimensions(path string) (int, int) {
+	file, err := os.Open(path)
+	if err != nil {
+		log.Error().
+			Str("file", path).
+			Str("error", err.Error()).
+			Msg("There was a error opening the file.")
+	}
+
+	image, _, err := image.DecodeConfig(file)
+	if err != nil {
+		log.Error().
+			Str("file", path).
+			Str("error", err.Error()).
+			Msg("Could not decode image.")
+	}
+
+	file.Close()
+	return image.Width, image.Height
 }

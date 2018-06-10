@@ -71,12 +71,16 @@ func errorHandler(w http.ResponseWriter, r *http.Request, status int) {
 	log.Error().Int("code", status).Str("path", r.URL.Path).Msg("Returned a error to client.")
 }
 
+var maxWidth float32 = 400
+
 func buildMediaHTML() string {
 	var html = ""
 	for k, v := range mediaFiles {
 		var itemCard card
 		itemCard.Src = "/media/icons/" + k
 		itemCard.Name = v.name
+		itemCard.Width = int(maxWidth)
+		itemCard.Height = int(maxWidth / float32(v.width) * float32(v.height))
 		html += itemCard.loadHTML() + "\n"
 	}
 

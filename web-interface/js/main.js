@@ -9,14 +9,16 @@ $( document ).ready(function() {
 var $grid = $('.grid').masonry({
   // options
   itemSelector: '.grid-item',
-  columnWidth: '.grid-sizer',
-  transitionDuration: '0.2s',
+  columnWidth: 400,
   initLayout: false
 });
 
 
-$grid.imagesLoaded().progress( function() {
-    console.log("Done loading images...");
-    
-    $grid.masonry();
-});
+
+setTimeout(() => {
+    $grid.imagesLoaded().progress( function() {
+        console.log("Done loading images...");
+        
+        $grid.masonry();
+    });
+}, 100);

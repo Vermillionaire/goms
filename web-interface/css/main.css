@@ -2,22 +2,18 @@
     height: 100%;
 }
 
-#side-bar {
-}
-
-
 #search {
     border-bottom: 0;
 }
-
+/*
 #media-cards {
     display: flex;
     flex-wrap: wrap;
-}
+}*/
 
 .grid-item { 
     float: left;
-    width: 25%;
+    width: 400px;
  }
 
 .grid-item img {

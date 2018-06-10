@@ -25,8 +25,10 @@ func loadTemplates() {
 }
 
 type card struct {
-	Src  string
-	Name string
+	Src    string
+	Name   string
+	Width  int
+	Height int
 }
 
 func (c *card) loadHTML() string {
