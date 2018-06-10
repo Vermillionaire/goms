@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 )
@@ -14,11 +16,11 @@ type media struct {
 	iconPath string
 }
 
-var mediaFiles map[string]media
+var mediaFiles map[string]*media
 
 func loadMedia(path string) {
 	if mediaFiles == nil {
-		mediaFiles = make(map[string]media)
+		mediaFiles = make(map[string]*media)
 	}
 
 	err := filepath.Walk(path, visit)
@@ -35,6 +37,16 @@ func visit(path string, f os.FileInfo, err error) error {
 
 	if isImage(ext) {
 		fmt.Print("Supported Image.\n")
+
+		image := new(media)
+		image.iconPath = ""
+		image.id = uuid()
+		image.name = filepath.Base(path)
+		image.path = path
+
+		fmt.Printf("Adding media:\n\tname: %s\n\tid: %s\n\tpath: %s\n", image.name, image.id, image.path)
+		mediaFiles[image.id] = image
+
 	} else {
 		fmt.Print("Not a supported image type.\n")
 	}
@@ -52,4 +64,17 @@ func isImage(extension string) bool {
 		}
 	}
 	return false
+}
+
+// Temporary solution for uuid
+func uuid() string {
+	out, err := exec.Command("/usr/bin/uuidgen").Output()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//n := bytes.IndexByte(out, 0)
+	s := string(out)
+	s = strings.TrimSpace(s)
+	return s
 }
